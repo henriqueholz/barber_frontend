@@ -4,12 +4,17 @@ import createStore from './createStore';
 import rootReducer from './modules/rootReducer';
 import rootSaga from './modules/rootSaga';
 
-const sagaMiddlewares = createSagaMiddleware();
+const sagaMonitor =
+  process.env.NODE_ENV === 'development'
+    ? console.tron.createSagaMonitor()
+    : null;
 
-const middlewares = [];
+const sagaMiddleware = createSagaMiddleware({ sagaMonitor });
+
+const middlewares = [sagaMiddleware];
 
 const store = createStore(rootReducer, middlewares);
 
-sagaMiddlewares.run(rootSaga);
+sagaMiddleware.run(rootSaga);
 
 export default store;
